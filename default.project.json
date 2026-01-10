@@ -1,0 +1,17 @@
+{
+  "name": "ProgressionUtils",
+
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "ProgressionUtils": {
+        "$path": "src",
+
+        "Packages": {
+          "$path": "Packages"
+        }
+      }
+    }
+  }
+}
