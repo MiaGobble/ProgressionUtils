@@ -1,0 +1,3 @@
+local TimedRewards = {}
+
+return TimedRewards

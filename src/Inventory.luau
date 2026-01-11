@@ -1,0 +1,3 @@
+local Inventory = {}
+
+return Inventory
