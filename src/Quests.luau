@@ -11,14 +11,14 @@ local Types = require(script.Parent.Types)
 -- Types extended
 export type QuestData = {
     QuestId : string,
-    QuestName : string,
+    QuestName : string?,
     QuestDescription : string?,
     QuestReward : (Player : Player) -> nil,
     RequireStepsInOrder : boolean,
 
     QuestSteps : {[number] : {
         MaxProgressionAmount : number,
-        StepName : string,
+        StepName : string?,
         StepDescription : string?,
     }}
 }
@@ -55,13 +55,13 @@ local function RequireIndexes(Table : {[any] : any}, Indexes : {any}, ObjectPref
 end
 
 function Quests.MakeQuest(QuestData : QuestData) : Quest
-    local Quest : Quest = {}
+    local Quest : Quest = table.clone(QuestData)
 
-    RequireIndexes(QuestData, {"QuestId", "QuestName", "RequireStepsInOrder", "QuestSteps"}, "Quest")
+    RequireIndexes(QuestData, {"QuestId", "RequireStepsInOrder", "QuestSteps"}, "Quest")
     RequireIndexes(QuestData.QuestSteps, {1}, "Quest.QuestSteps")
 
     for Index, QuestStep in QuestData.QuestSteps do
-        RequireIndexes(QuestStep, {"MaxProgressionAmount", "StepName"}, `Quest.QuestSteps[{Index}]`)
+        RequireIndexes(QuestStep, {"MaxProgressionAmount"}, `Quest.QuestSteps[{Index}]`)
     end
 
     Quest.OnIncrement = Signal.new()
@@ -162,7 +162,10 @@ function Quests.MakeQuest(QuestData : QuestData) : Quest
                 table.insert(ExistingProgress.CompletedQuestIds, Quest.QuestId)
                 table.remove(ExistingProgress, ProgressIndex)
                 Quest.OnComplete:Fire(Player)
-                task.spawn(Quest.QuestReward, Player)
+                
+                if Quest.QuestReward then
+                    task.spawn(Quest.QuestReward, Player)
+                end
             end
         end
 
