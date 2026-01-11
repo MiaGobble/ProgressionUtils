@@ -4,7 +4,7 @@ local Quests = {}
 local HttpService = game:GetService("HttpService")
 
 -- Imports
-local Packages = require(script.Parent.Packages)
+local Packages = script.Parent.Packages
 local Signal = require(Packages.Signal)
 local Types = require(script.Parent.Types)
 
@@ -48,7 +48,7 @@ export type Quest = QuestData & {
 
 local function RequireIndexes(Table : {[any] : any}, Indexes : {any}, ObjectPrefix : string)
     for _, RequiredIndex in Indexes do
-        if not Table[RequiredIndex] then
+        if Table[RequiredIndex] == nil then
             error(`{ObjectPrefix} requires index {RequiredIndex}`)
         end
     end
@@ -134,7 +134,7 @@ function Quests.MakeQuest(QuestData : QuestData) : Quest
 
         local SubTable = ExistingProgress.QuestsInProgress[ProgressIndex]
 
-        if not SubTable[StepProgressed] then
+        if not SubTable.StepProgress[StepProgressed] then
             error("Attempt to progress quest step that doesn't exist")
         end
 
@@ -146,7 +146,9 @@ function Quests.MakeQuest(QuestData : QuestData) : Quest
             return ExistingProgress -- Don't progress out of order
         end
 
-        local NewAmount = math.min(SubTable[StepProgressed] + AmountProgressed, Quest.QuestSteps[StepProgressed].MaxProgressionAmount)
+        local NewAmount = math.min(SubTable.StepProgress[StepProgressed] + AmountProgressed, Quest.QuestSteps[StepProgressed].MaxProgressionAmount)
+
+        SubTable.StepProgress[StepProgressed] = NewAmount
 
         if NewAmount >= Quest.QuestSteps[StepProgressed].MaxProgressionAmount then
             -- Completed step
@@ -160,7 +162,7 @@ function Quests.MakeQuest(QuestData : QuestData) : Quest
                 -- Completed quest
 
                 table.insert(ExistingProgress.CompletedQuestIds, Quest.QuestId)
-                table.remove(ExistingProgress, ProgressIndex)
+                table.remove(ExistingProgress.QuestsInProgress, ProgressIndex)
                 Quest.OnComplete:Fire(Player)
                 
                 if Quest.QuestReward then
