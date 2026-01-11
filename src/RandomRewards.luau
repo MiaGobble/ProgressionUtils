@@ -1,0 +1,3 @@
+local RandomRewards = {}
+
+return RandomRewards
