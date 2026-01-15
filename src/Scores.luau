@@ -3,6 +3,8 @@ local Scores = {}
 -- Imports
 local Packages = script.Parent.Packages
 local Signal = require(Packages.Signal)
+local Typer = require(Packages.Typer)
+local Boosters = require(script.Parent.Boosters)
 
 Scores.OnScoreAdded = Signal.new()
 Scores.OnScoreRemoved = Signal.new()
@@ -11,19 +13,11 @@ Scores.SetScore = nil -- Set with DeclareSetScoreCallback
 Scores.GetScore = nil -- Set with DeclareGetScoreCallback
 
 local function AssertScoreCallbacks()
-    if not Scores.SetScore then
-        error("Attempt to call a score method when SetScore was not declared")
-    end
-
-    if not Scores.GetScore then
-        error("Attempt to call a score method when GetScore was not declared")
-    end
+    Typer.TupleAssertion("function", "function")(Scores.SetScore, Scores.GetScore)
 end
 
 local function AssertScoreAsNumber(Value : any)
-    if typeof(Value) ~= "number" then
-        error("Read score value was not a number")
-    end
+    Typer.Cast(Value)("number")
 
     if math.round(Value) ~= Value then
         error("Read score was not an integer")
@@ -47,6 +41,19 @@ function Scores.DeclareGetScoreCallback(Callback : (Player : Player, ScoreType :
 end
 
 function Scores.AddScoreForPlayer(Player : Player, ScoreType : string, AddedAmount : number)
+    AssertScoreCallbacks()
+    AssertScoreAsNumber(AddedAmount)
+
+    local ExistingScore = Scores.GetScore(Player, ScoreType)
+
+    AssertScoreAsNumber(ExistingScore)
+
+    ExistingScore = math.floor(ExistingScore + AddedAmount * Boosters.GetScoreMultiplier(Player, ScoreType))
+    Scores.SetScore(Player, ScoreType, ExistingScore)
+    Scores.OnScoreAdded:Fire(Player, ScoreType, AddedAmount)
+end
+
+function Scores.AddScoreForPlayerRaw(Player : Player, ScoreType : string, AddedAmount : number)
     AssertScoreCallbacks()
     AssertScoreAsNumber(AddedAmount)
 
