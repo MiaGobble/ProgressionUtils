@@ -1,3 +1,0 @@
-local ItemData = {}
-
-return ItemData
