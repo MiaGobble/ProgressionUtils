@@ -101,7 +101,7 @@ function Boosters.ApplyBooster(Player : Player, BoosterData : BoosterDataInput)
     Boosters.BoosterApplied:Fire(Player, Data)
 end
 
-function Boosters.GetActiveBoosters(Player : Player) : {[Player] : BoosterData}
+function Boosters.GetActiveBoosters(Player : Player) : BoosterData
     return ActiveBoosters[Player] or {}
 end
 

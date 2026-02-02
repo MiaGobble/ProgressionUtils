@@ -37,7 +37,7 @@ export type QuestProgress = {
 }
 
 export type Quest = QuestData & {
-    OnIncrement : Types.Signal<Player, number>,
+    OnStepIncrement : Types.Signal<Player, number>,
     OnStart : Types.Signal<Player>,
     OnComplete : Types.Signal<Player>,
     OnStepComplete : Types.Signal<Player>,
@@ -64,7 +64,7 @@ function Quests.MakeQuest(QuestData : QuestData) : Quest
         RequireIndexes(QuestStep, {"MaxProgressionAmount"}, `Quest.QuestSteps[{Index}]`)
     end
 
-    Quest.OnIncrement = Signal.new()
+    Quest.OnStepIncrement = Signal.new()
     Quest.OnStart = Signal.new()
     Quest.OnComplete = Signal.new()
     Quest.OnStepComplete = Signal.new()

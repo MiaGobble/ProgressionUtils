@@ -84,7 +84,7 @@ function Scores.RemoveScoreForPlayer(Player : Player, ScoreType : string, Remove
     Scores.OnScoreRemoved:Fire(Player, ScoreType, RemovedAmount)
 end
 
-function Scores.HasAtLeast(Player : Player, ScoreType : number, Minimum : number)
+function Scores.HasAtLeast(Player : Player, ScoreType : number, Minimum : number) : boolean
     AssertScoreCallbacks()
     AssertScoreAsNumber(Minimum)
 
@@ -93,8 +93,10 @@ function Scores.HasAtLeast(Player : Player, ScoreType : number, Minimum : number
     AssertScoreAsNumber(ExistingScore)
 
     if ExistingScore >= Minimum then
-        return
+        return true
     end
+
+    return false
 end
 
 return Scores

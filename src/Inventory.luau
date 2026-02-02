@@ -21,7 +21,7 @@ local HttpService = game:GetService("HttpService")
 local Packages = script.Parent:FindFirstChild("Packages") or script.Parent
 local Typer = require(Packages.Typer)
 
-function Inventory.AddItemToInventory(InventoryData : InventoryData, ItemData : ItemDataInput, MaxStack : number)
+function Inventory.AddItemToInventory(InventoryData : InventoryData, ItemData : ItemDataInput, MaxStack : number) : InventoryData
     Typer.TupleAssertion("table", "string")(ItemData, ItemData.ItemId)
 
     if not MaxStack then
@@ -51,7 +51,7 @@ function Inventory.AddItemToInventory(InventoryData : InventoryData, ItemData : 
     return InventoryData
 end
 
-function Inventory.RemoveItemFromInventory(InventoryData : InventoryData, ItemId : string)
+function Inventory.RemoveItemFromInventory(InventoryData : InventoryData, ItemId : string) : InventoryData
     local OpenStack = nil
 
     for _, ThisItem : ItemData in InventoryData.Items do
@@ -73,7 +73,7 @@ function Inventory.RemoveItemFromInventory(InventoryData : InventoryData, ItemId
     return InventoryData
 end
 
-function Inventory.DoesOwnItem(InventoryData : InventoryData, ItemId : string)
+function Inventory.DoesOwnItem(InventoryData : InventoryData, ItemId : string) : boolean
     for _, ThisItem : ItemData in InventoryData.Items do
         if ThisItem.ItemId == ItemId then
             return true
@@ -83,7 +83,7 @@ function Inventory.DoesOwnItem(InventoryData : InventoryData, ItemId : string)
     return false
 end
 
-function Inventory.GetBlankInventoryData()
+function Inventory.GetBlankInventoryData() : InventoryData
     local InventoryData : InventoryData = {
         Items = {},
     }
