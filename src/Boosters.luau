@@ -14,16 +14,16 @@ type BoosterDataInput = BoosterDataCore & {
 
 export type BoosterData = BoosterDataInput & {
     StartingTime : number,
-    Heap : any,
+    Bucket : any,
 }
 
 -- Services
 local RunService = game:GetService("RunService")
 
 -- Imports
-local Packages = script.Parent.Packages
+local Packages = script.Parent:FindFirstChild("Packages") or script.Parent
 local Signal = require(Packages.Signal)
-local Heap = require(Packages.Heap)
+local Bucket = require(Packages.Bucket)
 
 -- Variables
 local ActiveBoosters : {[Player] : BoosterData} = {}
@@ -50,7 +50,7 @@ function Boosters.ApplyBooster(Player : Player, BoosterData : BoosterDataInput)
         end
     end
 
-    local ThisHeap = Heap.new()
+    local ThisBucket = Bucket.new()
 
     local Data = {
         ScoreId = BoosterData.ScoreId,
@@ -59,24 +59,24 @@ function Boosters.ApplyBooster(Player : Player, BoosterData : BoosterDataInput)
         StackMethod = BoosterData.StackMethod,
         TotalTime = BoosterData.TotalTime,
         StartingTime = os.clock(),
-        Heap = ThisHeap,
+        Bucket = ThisBucket,
     }
 
-    ThisHeap:Add(RunService.Heartbeat:Connect(function()
+    ThisBucket:Add(RunService.Heartbeat:Connect(function()
         if os.clock() - Data.StartingTime >= Data.TotalTime then
-            ThisHeap:Destroy()
+            ThisBucket:Destroy()
         end
     end))
 
-    ThisHeap:Add(Player.AncestryChanged:Connect(function()
+    ThisBucket:Add(Player.AncestryChanged:Connect(function()
         task.defer(function()
             if not Player.Parent then
-                ThisHeap:Destroy()
+                ThisBucket:Destroy()
             end
         end)
     end))
 
-    ThisHeap:Add(function()
+    ThisBucket:Add(function()
         if not Player.Parent then
             ActiveBoosters[Player] = nil
             return
