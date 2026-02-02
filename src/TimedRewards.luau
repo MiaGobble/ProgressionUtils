@@ -1,3 +1,0 @@
-local TimedRewards = {}
-
-return TimedRewards
