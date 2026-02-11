@@ -21,7 +21,7 @@ export type BoosterData = BoosterDataInput & {
 local RunService = game:GetService("RunService")
 
 -- Imports
-local Packages = script.Parent:FindFirstChild("Packages") or script.Parent
+local Packages = script.Parent:FindFirstChild("Packages") or script.Parent.Parent
 local Signal = require(Packages.Signal)
 local Bucket = require(Packages.Bucket)
 

@@ -1,7 +1,7 @@
 local Scores = {}
 
 -- Imports
-local Packages = script.Parent:FindFirstChild("Packages") or script.Parent
+local Packages = script.Parent:FindFirstChild("Packages") or script.Parent.Parent
 local Signal = require(Packages.Signal)
 local Typer = require(Packages.Typer)
 local Boosters = require(script.Parent.Boosters)

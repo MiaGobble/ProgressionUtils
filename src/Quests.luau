@@ -4,7 +4,7 @@ local Quests = {}
 local HttpService = game:GetService("HttpService")
 
 -- Imports
-local Packages = script.Parent:FindFirstChild("Packages") or script.Parent
+local Packages = script.Parent:FindFirstChild("Packages") or script.Parent.Parent
 local Signal = require(Packages.Signal)
 local Types = require(script.Parent.Types)
 
